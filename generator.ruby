@@ -36,7 +36,20 @@ class Message
 end
 
 class Parser
-	def self.run
+	attr_reader :messages
+
+	$messages = []
+
+	def self.run(file)
+		File.open(file).each do |line|
+			$messages << line.split
+		end
+	end
+
+	def self.clean
+		$messages.map! do |message|
+			#some cleaning here
+		end
 	end
 end
 
@@ -46,9 +59,12 @@ class Messenger
 end
 
 #Run program
-Controller.run(ARGV)
-p $command == "send"
+#Controller.run(ARGV)
+#p $command == "send"
 
 #Driver code
+Parser.run('pickups.txt')
+p $messages.count != 0
+
 
 
