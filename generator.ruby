@@ -18,6 +18,7 @@ class Controller
 			when "send"
 				p "send to #{$name}, number #{$number}"
 				p "the following message"
+				Parser.run('pickups.txt')
 				Message.generate
 			else
 				p "this command does not exist"
@@ -32,6 +33,7 @@ end
 
 class Message
 	def self.generate
+		p $messages.sample.join(" ") 
 	end
 end
 
@@ -48,7 +50,7 @@ class Parser
 
 	def self.clean
 		$messages.map! do |message|
-			#some cleaning here
+			#some cleaning here with REGEX
 		end
 	end
 end
