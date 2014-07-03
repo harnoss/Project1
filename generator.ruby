@@ -14,26 +14,19 @@
 #Object-design
 class Controller
 	def self.run(input)
-		type, command, number, name = input[0], input[1], input[2], input[3]
+		# Embrace destructured assignment and the "splat" operator
+		quote_type, command, number, name = *input
+		file_name = quote_type + ".txt"
+		raise "File does not exist" unless File.exists?(file_name)
+		raise "you must pass the `send` command" unless command
+		print_status(name, number)
+		message = Message.generate(name, Parser.run(file_name), quote_type)
+		Messenger.send_SMS(number, message)
+	end
 
-		case type
-			when "pickup"
-				file = 'pickups.txt'
-			when "sherif"
-				file = 'sherif.txt'
-			else
-				p "this file does not exist"
-		end
-
-		case command 
-			when "send"
-				p "send to #{$name}, number #{$number}"
-				p "the following message"
-				message = Message.generate(name, Parser.run(file), type)
-				Messenger.send_SMS(number, message)
-			else
-				p "this command does not exist"
-		end
+	def self.print_status(name, number)
+		p "send to #{$name}, number #{$number}"
+		p "the following message"
 	end
 end
 
@@ -44,7 +37,7 @@ end
 
 class Message
 	def self.generate(name, all_messages, type)
-		line = all_messages.sample.join(" ") 
+		line = all_messages.sample.join(" ")
 		if type == "sherif"
 			return "#{name}, #{line.downcase} Best wishes, Sherif"
 		else
@@ -60,7 +53,7 @@ class Parser
 
 	def self.run(file)
 		File.open(file).each do |line|
-			@all_messages << line.split			
+			@all_messages << line.split
 		end
 		return @all_messages
 	end
@@ -71,13 +64,9 @@ class Parser
 		end
 		p @all_messages.size
 	end
-	
 
-#	def self.clean
-#		$messages.map! do |message|
-#			#some cleaning here with REGEX
-#		end
-#	end
+
+
 end
 
 class Messenger
@@ -93,7 +82,7 @@ class Messenger
 end
 
 #Run program
-Controller.run(ARGV)
+Controller.new().run(ARGV)
 #p $command == "send"
 
 #Driver code
