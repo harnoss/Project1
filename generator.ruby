@@ -29,7 +29,7 @@ class Controller
 			when "send"
 				p "send to #{$name}, number #{$number}"
 				p "the following message"
-				message = Message.generate(name, Parser.run(file))
+				message = Message.generate(name, Parser.run(file), type)
 				Messenger.send_SMS(number, message)
 			else
 				p "this command does not exist"
@@ -43,9 +43,13 @@ class Viewer
 end
 
 class Message
-	def self.generate(name, all_messages)
+	def self.generate(name, all_messages, type)
 		line = all_messages.sample.join(" ") 
-		return "#{name}, #{line}"
+		if type == "sherif"
+			return "#{name}, #{line.downcase} Best wishes, Sherif"
+		else
+			return "#{name}, #{line}"
+		end
 	end
 end
 
