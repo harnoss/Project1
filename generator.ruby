@@ -88,6 +88,11 @@ class Parser
 		p @all_messages.size
 	end
 
+# Inspiration for some day....a Sinatra route which knows how to Twilio-out a message..good luck!
+# post '/pickups/:source_phone' do
+# 	pickup = Pickup.all.sample
+# 	Twilio.new(content: pickup.body, destination: params[:source_phone])
+# end
 
 
 end
