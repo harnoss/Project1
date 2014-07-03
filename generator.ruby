@@ -14,13 +14,22 @@
 #Object-design
 class Controller
 	def self.run(input)
-		command, number, name = input[0], input[1], input[2]
+		type, command, number, name = input[0], input[1], input[2], input[3]
+
+		case type
+			when "pickup"
+				file = 'pickups.txt'
+			when "sherif"
+				file = 'sherif.txt'
+			else
+				p "this file does not exist"
+		end
 
 		case command 
 			when "send"
 				p "send to #{$name}, number #{$number}"
 				p "the following message"
-				message = Message.generate(name, Parser.run('pickups.txt'))
+				message = Message.generate(name, Parser.run(file))
 				Messenger.send_SMS(number, message)
 			else
 				p "this command does not exist"
@@ -84,7 +93,7 @@ Controller.run(ARGV)
 #p $command == "send"
 
 #Driver code
-#Parser.run('pickups.txt')
+#p Message.generate("Justin", Parser.run('pickups.txt'))
 #Parser.show
 
 #p $messages.count != 0
