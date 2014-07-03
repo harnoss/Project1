@@ -20,8 +20,8 @@ class Controller
 			when "send"
 				p "send to #{$name}, number #{$number}"
 				p "the following message"
-				Parser.run('pickups.txt')
-				message = Message.generate(name)
+				#all_messages = Parser.run('pickups.txt')
+				message = Message.generate(name, Parser.run('pickups.txt'))
 				Messenger.send_SMS(number, message)
 			else
 				p "this command does not exist"
@@ -35,8 +35,8 @@ class Viewer
 end
 
 class Message
-	def self.generate(name)
-		line = $messages.sample.join(" ") 
+	def self.generate(name, all_messages)
+		line = all_messages.sample.join(" ") 
 		return "#{name}, #{line}"
 	end
 end
@@ -44,11 +44,12 @@ end
 class Parser
 	attr_reader :messages
 
-	$messages = []
+	@all_messages = []
 
 	def self.run(file)
 		File.open(file).each do |line|
-			$messages << line.split
+			@all_messages << line.split
+			return @all_messages
 		end
 	end
 
@@ -77,6 +78,7 @@ Controller.run(ARGV)
 
 #Driver code
 #Parser.run('pickups.txt')
+
 #p $messages.count != 0
 
 
