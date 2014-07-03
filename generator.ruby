@@ -20,7 +20,6 @@ class Controller
 			when "send"
 				p "send to #{$name}, number #{$number}"
 				p "the following message"
-				#all_messages = Parser.run('pickups.txt')
 				message = Message.generate(name, Parser.run('pickups.txt'))
 				Messenger.send_SMS(number, message)
 			else
@@ -48,10 +47,18 @@ class Parser
 
 	def self.run(file)
 		File.open(file).each do |line|
-			@all_messages << line.split
-			return @all_messages
+			@all_messages << line.split			
 		end
+		return @all_messages
 	end
+
+	def self.show
+		@all_messages.each do |message|
+			p message
+		end
+		p @all_messages.size
+	end
+	
 
 #	def self.clean
 #		$messages.map! do |message|
@@ -78,6 +85,7 @@ Controller.run(ARGV)
 
 #Driver code
 #Parser.run('pickups.txt')
+#Parser.show
 
 #p $messages.count != 0
 
