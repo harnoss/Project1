@@ -31,21 +31,26 @@ end
 
 
 class Controller
-	def self.run(input)
+	def initialize(quote)
+		@quote = quote
+	end
+
+	def run(input)
 		# Embrace destructured assignment and the "splat" operator
+		quote = QuoteRetriever.new(quote_type).quote
 		quote_type, command, number, name = *input
-		file_name = quote_type + ".txt"
-		raise "File does not exist" unless File.exists?(file_name)
 		raise "you must pass the `send` command" unless command
 		print_status(name, number)
 		message = Message.generate(name, Parser.run(file_name), quote_type)
 		Messenger.send_SMS(number, message)
 	end
 
-	def self.print_status(name, number)
-		p "send to #{$name}, number #{$number}"
-		p "the following message"
-	end
+	private
+
+		def print_status(name, number)
+			p "send to #{$name}, number #{$number}"
+			p "the following message"
+		end
 end
 
 class Viewer
@@ -99,8 +104,15 @@ class Messenger
 	end
 end
 
+puts
+Kernel.exit 0
 #Run program
-Controller.new().run(ARGV)
+# this is known as dependency inversion
+# Normally speaking a controller would need to get a quote, in order to SMS it out, but instead what we say is
+# Controller, you will be given a quote, and then you need to bundle it up into an SMS.  The idea is that
+# a programmer can look at the following line and know where the quote comes from at a glance, and can trust
+# that the string (a quote) that is passed in, will not be changed
+Controller.new(QuoteRetriever.new('pickup').quote).run(ARGV)
 #p $command == "send"
 
 #Driver code
