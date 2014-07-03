@@ -12,6 +12,24 @@
 #require 'twilio-ruby'
 
 #Object-design
+# This is part of a pattern called a "method object" -- look up for more info
+class QuoteRetriever
+	def initialize(type)
+		@type = type
+	end
+
+	def quote
+		raise "File does not exist" unless File.exists?(file_name)
+		File.open(file_name).readlines.sample
+	end
+
+	private
+		def file_name
+			@type + ".txt"
+		end
+end
+
+
 class Controller
 	def self.run(input)
 		# Embrace destructured assignment and the "splat" operator
